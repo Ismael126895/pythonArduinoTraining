@@ -42,12 +42,28 @@ ball=sphere(radius=ball_radius,
 ballX=0
 deltaX=.1
 
+ballY=0
+deltaY=.1
+
+ballZ=0
+deltaZ=.1
+
 while True:
     rate(20) 
     ballX=ballX+deltaX
+    ballY=ballY+deltaY
+    ballZ=ballZ+deltaZ
     if ballX+ball_radius > (wall_lengthX/2-wall_thickness/2) or ballX-ball_radius < (-wall_lengthX/2+wall_thickness/2):
         deltaX=deltaX*(-1)
         ballX=ballX+deltaX
 
-    ball.pos=vector(ballX,0,0)
+    if ballY+ball_radius > (wall_heightY/2-wall_thickness/2) or ballY-ball_radius < (-wall_heightY/2+wall_thickness/2):
+        deltaY=deltaY*(-1)
+        ballY=ballY+deltaY
+
+    if ballZ+ball_radius > (wall_widthZ/2-wall_thickness/2) or ballZ-ball_radius < (-wall_widthZ/2+wall_thickness/2):
+        deltaZ=deltaZ*(-1)
+        ballZ=ballZ+deltaZ
+
+    ball.pos=vector(ballX,ballY,ballZ)
     pass
