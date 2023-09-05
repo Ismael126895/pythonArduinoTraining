@@ -1,6 +1,8 @@
 import numpy as np
 from vpython import *
 import serial
+import time
+import os
 
 arduinoData=serial.Serial('com4',115200)
 
@@ -97,6 +99,10 @@ while True:
         if ballX>padX-paddleX/2 and ballX<padX+paddleX/2 and ballY>padY-paddleY/2 and ballY<padY+paddleY/2:
             deltaZ=deltaZ*(-1)
             ballZ=ballZ+deltaZ
+        else:
+            lb=label(text="GAME OVER !!!")
+            time.sleep(2)
+            os._exit(0)
 
 
 
