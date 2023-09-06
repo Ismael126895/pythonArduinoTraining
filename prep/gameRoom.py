@@ -22,6 +22,11 @@ paddleZ=.2
 paddleOpacity=.8
 paddleColor=vector(0,.8,6)
 
+blocking_wall_color=vector(1,1,0)
+blocking_wall_opacity=.6
+
+score=0
+
 left_wall=box(pos=vector(-wall_lengthX/2,0,0),
                 color=wall_color,
                 size=vector(wall_thickness,wall_heightY,wall_widthZ),
@@ -52,8 +57,21 @@ paddle=box(size=vector(paddleX,paddleY,paddleZ),
             pos=vector(0,0,wall_widthZ/2),
             color=paddleColor,
             opacity=paddleOpacity)
+blocking_wall=box(pos=vector(0,0,wall_widthZ/2),
+                size=vector(wall_lengthX,wall_heightY,wall_thickness),
+                color=blocking_wall_color,
+                opacity=blocking_wall_opacity)
+score_label=label(Text=score)
 
+def add_scores(point):
+    global score
+    score = score + point
+    score_label.text=score
+def show_blocking_wall():
+    blocking_wall.visible = True
 
+def hide_blocking_wall():
+    blocking_wall.visible = False
 
 ballX=0
 deltaX=.1
@@ -65,6 +83,7 @@ ballZ=0
 deltaZ=.1
 
 while True:
+    
     while arduinoData.inWaiting() == 0:
         pass
     dataPacket = arduinoData.readline() 
@@ -83,6 +102,10 @@ while True:
     ballX=ballX+deltaX
     ballY=ballY+deltaY
     ballZ=ballZ+deltaZ
+    if z == 1:
+        hide_blocking_wall()
+    if z == 0:
+        show_blocking_wall()
     if ballX+ball_radius > (wall_lengthX/2-wall_thickness/2) or ballX-ball_radius < (-wall_lengthX/2+wall_thickness/2):
         deltaX=deltaX*(-1)
         ballX=ballX+deltaX
@@ -99,6 +122,11 @@ while True:
         if ballX>padX-paddleX/2 and ballX<padX+paddleX/2 and ballY>padY-paddleY/2 and ballY<padY+paddleY/2:
             deltaZ=deltaZ*(-1)
             ballZ=ballZ+deltaZ
+            add_scores(1)
+        elif z==0:
+            deltaZ=deltaZ*(-1)
+            ballZ=ballZ+deltaZ
+            add_scores(1)
         else:
             lb=label(text="GAME OVER !!!")
             time.sleep(2)
